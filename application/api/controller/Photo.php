@@ -7,6 +7,9 @@
     {
         public function index()
         {
+
             return ModelPhoto::getPhotoList();
+
+
         }
     }

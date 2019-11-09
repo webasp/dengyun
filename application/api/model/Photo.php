@@ -30,7 +30,7 @@ class Photo extends BasicModel
     }
 
     // 获取相册列表
-    public static function getPhotoList($page=1)
+    public static function getPhotoList($page = 1)
     {
         return self::with([
             'item' => function ($query){
@@ -42,8 +42,14 @@ class Photo extends BasicModel
             'like' => function ($query){
                 $query->with('user')->order('id', 'desc')->limit(5);
             }
-        ])->order('id desc')
-        ->page($page,Config::get('photo.PAGE_ROWS'))->select();
+        ])
+            ->where('status','1')
+            ->order('id desc')
+            ->paginate(
+                   Config::get('photo.PAGE_ROWS'),
+                   false,
+                   ['page' => $page]
+                 );
     }
 
 
