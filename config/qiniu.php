@@ -5,6 +5,6 @@ return [
     'SECRET_KEY'   => 'KpLQHewntLjepii8D5DQGY34Rmv5v86LOciHrlyb',
     'BUCKET_NAME' => 'dengyun',
     'QINIU_URL' => 'http://up-z2.qiniu.com',
-    'FILE_URL' => 'https://i.dengyun.me/'
+    'FILE_URL' => 'https://img.dengyun.me/'
 ];
 
