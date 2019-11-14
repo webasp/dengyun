@@ -5,14 +5,17 @@
  */
 namespace app\api\model;
 
-use think\facade\Config;
 
 class User extends BasicModel
 {
     protected $hidden = ['id','openid','create_at','update_at'];
 
+    // 设置头像图片地址
     public function getAvatarAttr($value, $data)
     {
         return $this->prefixImgUrl($value, $data);
     }
+
+
+
 }

@@ -1,5 +1,6 @@
 <?php
 
     Route::group('api', function() {
-        Route::rule('photo','api/Photo/index');
+        Route::get('photo','api/Photo/index');
+        Route::post('token','api/Token/getToken');
     });
