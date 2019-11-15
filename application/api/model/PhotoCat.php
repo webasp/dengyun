@@ -5,8 +5,6 @@
  */
 namespace app\api\model;
 
-use think\facade\Config;
-
 class PhotoCat extends BasicModel
 {
 

@@ -6,10 +6,12 @@
 namespace app\api\model;
 
 use think\facade\Config;
+use think\facade\Request;
 
 class Photo extends BasicModel
 {
     protected $hidden = ['album_id','update_at','status','cat_id'];
+    protected $user_id = null;
 
     // 关联照片列表
     public function item()
@@ -24,9 +26,22 @@ class Photo extends BasicModel
     }
 
     // 关联喜欢列表
-    public function like()
+    public function likeList()
     {
         return $this->hasMany('PhotoLike','photo_id','id');
+    }
+
+    // 关联喜欢列表
+    public function like()
+    {
+        return $this->hasOne('photoLike');
+    }
+
+    // 关联标签列表
+    public function tags ()
+    {
+
+        return $this->belongsToMany('PhotoTags', 'PhotoTagsMap', 'photo_id', 'tag_id');
     }
 
     // 获取相册列表
@@ -39,8 +54,14 @@ class Photo extends BasicModel
             'review'=> function ($query){
                 $query->with('user')->order('id', 'desc')->limit(3);
             },
-            'like' => function ($query){
+            'likeList' => function ($query){
                 $query->with('user')->order('id', 'desc')->limit(5);
+            },
+            'like' => function ($query) {
+                $query->where('user_id','2');
+            },
+            'tags' => function ($query) {
+                $query->field('id,name')->order('click', 'desc');
             }
         ])
             ->where('status','1')
@@ -51,10 +72,5 @@ class Photo extends BasicModel
                    ['page' => $page]
                  );
     }
-
-
-
-
-
 
 }

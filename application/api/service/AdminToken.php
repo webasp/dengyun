@@ -15,6 +15,7 @@ class AdminToken extends Token
 {
     public function get($data)
     {
+        $data['password'] = md5($data['password']);
         $admin = Admin::check($data);
         if(!$admin){
             throw new TokenException([
@@ -22,15 +23,8 @@ class AdminToken extends Token
                 'errorCode' => 10004
             ]);
         } else {
-            $username = $admin->username;
-            $password = $admin->password;
 
-            $values = [
-                'username' => $username,
-                'password' => $password
-            ];
-
-            $token = $this->saveToCache($values);
+            $token = $this->saveToCache($data);
             return $token;
         }
     }
