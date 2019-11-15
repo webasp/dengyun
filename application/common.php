@@ -68,6 +68,7 @@ function curl_get($url, &$httpCode = 0)
     return $file_contents;
 }
 
+// 生成字 32 符串
 function getRandChar($length)
 {
     $str = null;

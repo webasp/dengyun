@@ -5,5 +5,6 @@
  */
 
 return [
-    'IMG_URL'   => 'https://img.dengyun.me/'    // 图片地址
+    'IMG_URL'   => 'https://img.dengyun.me/',    // 图片地址
+    'TOKEN_EXPIRE_IN'   => 7200                  // Token 缓存有效时间
 ];

@@ -16,6 +16,12 @@ class User extends BasicModel
         return $this->prefixImgUrl($value, $data);
     }
 
+    // 获取 openID
+    public static function getOpenId($openId)
+    {
+        return self::where('openid','=',$openId)->find();
+    }
+
 
 
 }
