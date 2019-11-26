@@ -29,10 +29,10 @@ class Token
 
     /**
      * 管理员登录
-     * @url /adminToken
+     * @url /appToken
      * @POST
      */
-    public function adminToken()
+    public function appToken()
     {
         $result = new AdminTokenGet();
         $result->goCheck();

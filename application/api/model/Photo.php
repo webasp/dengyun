@@ -40,7 +40,6 @@ class Photo extends BasicModel
     // 关联标签列表
     public function tags ()
     {
-
         return $this->belongsToMany('PhotoTags', 'PhotoTagsMap', 'photo_id', 'tag_id');
     }
 

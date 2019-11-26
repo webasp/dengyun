@@ -4,7 +4,7 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => 'sql.l92.vhostgo.com',
+    'hostname'        => 'localhost',
     // 数据库名
     'database'        => 'dengyun',
     // 用户名

@@ -1,0 +1,10 @@
+<?php
+    Route::get('/$','home/Home/index');
+    Route::get('archives$','home/archives/index');
+    Route::get('tags$','home/tags/index');
+    Route::get('notebook$','home/notebook/index');
+    Route::get('photo$','home/photo/index');
+    Route::get('ett$','home/ett/index');
+    Route::get('okr$','home/okr/index');
+    Route::get('diary$','home/diary/index');
+    Route::get('about$','home/about/index');

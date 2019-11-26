@@ -1,6 +1,4 @@
 <?php
-    Route::post('admin/token$','api/Token/adminToken');
-    Route::group('admin', function() {
-
-        Route::post('token/verify','api/Token/verifyToken');
-    })->middleware('authToken');
+    Route::get('admin/$','admin/Index/index');
+    Route::get('admin/login$','admin/Login/index');
+    Route::get('admin/main$','admin/main/index');
