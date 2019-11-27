@@ -31,8 +31,7 @@
             // 获取缓存中的用户信息
             $exist = Cache::get($Token);
             $user = json_decode($exist,true);
-            $request->user_id = $user['id'];
-            $request->username = $user['username'];
+            $request->user = $user;
 
             return $next($request);
         }

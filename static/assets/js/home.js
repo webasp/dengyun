@@ -11,12 +11,13 @@ layui.define(['element','layer'],function(exports){
 
     // 判断是否登录
     var params={
-        url:'api/token/verify',
+        url:'api/admin',
         type:'POST',
-        data:{'token':'fdfdf'},
         tokenFlag:true,
         sCallback:function(res) {
-
+            if(res.status === 1){
+                $("#username").text(res.data.username);
+            }
         }
     };
     window.base.getData(params);
