@@ -23,8 +23,8 @@ class AdminToken extends Token
                 'errorCode' => 10004
             ]);
         } else {
-
-            $token = $this->saveToCache($data);
+            // 保存到缓存
+            $token = $this->saveToCache($admin);
             return $token;
         }
     }
@@ -32,6 +32,7 @@ class AdminToken extends Token
     private function saveToCache($values){
         $token = self::generateToken();
         $value = json_encode($values);
+
         $expire_in = Config::get('system.TOKEN_EXPIRE_IN');
         $request = cache($token,$value,$expire_in);
         if(!$request){

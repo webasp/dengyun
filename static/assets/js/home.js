@@ -4,11 +4,37 @@ layui.define(['element','layer'],function(exports){
         element = layui.element,
         layer = layui.layer;
 
+    // 判断token 是否存在
+    if(!window.base.getLocalStorage('token')){
+        window.location.href = '/admin/login';
+    }
+
+    // 判断是否登录
+    var params={
+        url:'api/token/verify',
+        type:'POST',
+        data:{'token':'fdfdf'},
+        tokenFlag:true,
+        sCallback:function(res) {
+
+        }
+    };
+    window.base.getData(params);
+
+    // 退出登录
+    $(document).on('click','#login-out',function(){
+        window.base.deleteLocalStorage('token');
+        window.location.href = '/admin/login';
+    });
+
+
+    // 判断设备
     var screen_size = {
         pc : [991, -1],
         pad : [768, 990],
         mobile : [0, 767]
-    }
+    };
+
 
     var getDevice = function(){
         var width = $(window).width();
@@ -22,20 +48,20 @@ layui.define(['element','layer'],function(exports){
             }
         }
         return null;
-    }
+    };
 
     var isDevice = function(label){
         return getDevice() == label;
-    }
+    };
 
     var isMobile = function(){
         return isDevice('mobile');
-    }
+    };
 
     var Tab = function(el){
         this.el = el;
         this.urls = [];
-    }
+    };
 
     Tab.prototype.content = function(src) {
         var iframe = document.createElement("iframe");

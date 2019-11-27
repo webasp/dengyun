@@ -9,8 +9,11 @@ namespace app\api\model;
 
 class Admin extends BasicModel
 {
+
+    // 验证管理员
     public static function check($data)
     {
         return self::where($data)->find();
     }
+
 }

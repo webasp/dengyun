@@ -15,7 +15,7 @@
 
     // 自动引入模块
     layui.config({
-        base: '/static/assets/js/',
+        base: '/static/assets/js/'
     }).extend(app).use(entry || 'home');
 
     // 公用方法
