@@ -16,4 +16,13 @@ class Admin extends BasicModel
         return self::where($data)->find();
     }
 
+    // 获取文章列表
+    public static function getArticle()
+    {
+
+    }
+
+
+
+
 }
