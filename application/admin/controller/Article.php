@@ -16,4 +16,10 @@
         {
             return $this->fetch();
         }
+
+        // 文章编辑页面
+        public function edit()
+        {
+            return $this->fetch();
+        }
     }

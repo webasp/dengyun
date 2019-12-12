@@ -134,3 +134,36 @@
 .form-box{
     padding: 10px 0;
 }
+
+/* 文章编辑弹出窗口 */
+#editForm{}
+#editForm .inner{
+    padding-right: 15px;
+}
+.edit-form{
+    padding:10px 0
+}
+
+.edit-form .layui-input{
+
+}
+
+.edit-form label{
+
+    line-height: 30px;
+
+    color: #808080;
+
+    font-size: 14px;
+
+    padding: 5px;
+}
+
+.edit_update{
+    width: 79%;
+    height: 100px;
+    padding: 60px 30px;
+}
+.edit_update .layui-icon{
+    color: #c2dae9;
+}

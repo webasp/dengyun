@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="__ASSETS__/css/layui.css">
     <link rel="stylesheet" href="__ASSETS__/css/view.css"/>
+    <link rel="stylesheet" href="__ASSETS__/css/markdown-editor.css"/>
     <link rel="icon" href="/favicon.ico">
     <title> 文章列表 </title>
 </head>
@@ -17,37 +18,243 @@
     <div class="layui-row">
         <div class="layui-card">
             <div class="layui-card-body">
-                <div class="form-box">
+                <div class="form-search">
                     <div class="layui-form layui-form-item">
                         <div class="layui-inline">
-                            <div class="layui-form-mid"> 搜索文章 :</div>
-                            <div class="layui-input-inline" style="width: 100px;">
-                                <input type="text" autocomplete="off" class="layui-input">
+
+                            <div class="layui-input-inline" style="width:250px;">
+                                <input type="text" name="search" autocomplete="off" placeholder="搜索标题" class="layui-input">
                             </div>
-                            <button class="layui-btn layui-btn-blue"> 搜索 </button>
+
+                            <button id="search-btn" class="layui-btn layui-btn-blue"> 搜索 </button>
                             <button class="layui-btn layui-btn-blue"><i class="layui-icon">&#xe654;</i> 新增 </button>
+
                         </div>
                     </div>
 
-                    <table class="layui-hide" id="test"></table>
+                    <table class="layui-hide" id="article" lay-filter="article"></table>
 
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script src="__ASSETS__/layui.js"></script>
-<script src="__ASSETS__/js/index.js" data-main="article"></script>
+<script src="__ASSETS__/layui.all.js"></script>
+<script src="__ASSETS__/Parser.js"></script>
+<script src="__ASSETS__/js/base.js"></script>
+
+<script>
+    var form = layui.form;
+    var table = layui.table;
+    var layer = layui.layer;
+    var laytpl = layui.laytpl;
+    var $ = layui.$;
+    table.render({
+        elem: '#article'
+        ,url:'/api/admin/artall'
+        ,method:'post'
+        ,headers:{token:window.base.getLocalStorage('token')}
+        ,cols: [[
+             {field:'id', title:'ID', width:50}
+            ,{field:'title', title:'文章标题'}
+            ,{field:'cat_name', title:'所属分类',width:200,align:'center'}
+            ,{field:'create_at', title: '发布时间',width:200,align:'center'}
+            ,{field:'like_num', title: '喜欢',width:80, sort: true,align:'center'}
+            ,{field:'view_num', title: '查看',width:80, sort: true,align:'center'}
+            ,{field:'review_num', title: '评论',width:80, sort: true,align:'center'}
+            ,{field:'selected', title:'荐',width:50, templet: '#selectedTpl',align:'center'}
+            ,{field:'status', title:'状态', width:85, templet: '#statusTpl',align:'center'}
+            ,{field:'', title:'操作', width:180, templet: '#toolTpl',fixed: 'right',align:'center'}
+        ]]
+        ,page: true
+        ,height: 'full-200'
+        ,limit:30
+        ,size: 'lg'
+    });
+
+    // 表格重载
+    var $ = layui.$, active = {
+        reload: function(){
+            var demoReload = $('#demoReload');
+
+            //执行重载
+            table.reload('testReload', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                ,where: {
+                    key: {
+                        id: demoReload.val()
+                    }
+                }
+            }, 'data');
+        }
+    };
 
 
-<script type="text/html" id="switchTpl">
-    <input type="checkbox" name="sex" value="{{d.id}}" lay-skin="switch" lay-text="女|男" lay-filter="sexDemo" {{ d.id == 10003 ? 'checked' : '' }}>
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
+
+
+    layui.config({base: '/static/assets/lay/'}).extend({
+        markdown: 'modules/markdown'
+    });
+
+
+    //监听性别操作
+    form.on('checkbox(selected)', function(obj){
+        layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+    });
+
+    //监听锁定操作
+    form.on('switch(status)', function(obj){
+        layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+    });
+
+    //监听工具条
+    table.on('tool(article)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'detail'){
+            layer.msg('ID：'+ data.id + ' 的查看操作');
+        } else if(obj.event === 'del'){
+            layer.confirm('确定要删除吗？', function(index){
+                obj.del();
+                layer.close(index);
+            });
+        } else if(obj.event === 'edit'){
+            var getTpl = edit.innerHTML;
+            laytpl(getTpl).render(data, function(html){
+                var index = layer.open({
+                    title:null,
+                    type: 1,
+                    area: ['1300px', '700px'],
+                    content: html
+                });
+
+                form.render();
+
+
+
+
+                layui.use(['form', 'markdown'], function () {
+                    layui.markdown.build("layui_md", {
+                        image_upload_action: '/admin/attachment/uploadImage',
+                        height: 400, required: true
+                    });
+                    // markdown 解析
+                    // var parser = new HyperDown;
+                    //var html = parser.makeHtml(val);
+                })
+
+
+
+                form.on('submit(user_record)', function(data){
+                    $.get("/sysadmin/api_vip_record.php?act=vip_confirm",data.field,function (json) {
+                        if(json.error === 1){
+                            layer.msg(json.content);
+                            layer.close(index);
+                            window.location.reload()
+                        }else{
+                            layer.msg(json.content);
+                            layer.close(index);
+                        }
+                    });
+                    return false;
+                });
+
+            });
+        }
+    });
+
+
+
+
+
 </script>
 
-<script type="text/html" id="checkboxTpl">
-    <input type="checkbox" name="lock" value="{{d.id}}" title="锁定" lay-filter="lockDemo" {{ d.id == 10006 ? 'checked' : '' }}>
+
+<script type="text/html" id="selectedTpl">
+    <input type="checkbox" name="selected" value="{{d.selected}}" lay-skin="primary" lay-filter="selected" {{ d.selected == 1 ? 'checked' : '' }}>
 </script>
 
+<script type="text/html" id="statusTpl">
+    <input type="checkbox" name="status" value="{{d.status}}"  lay-skin="switch" lay-text="显示|隐藏" lay-filter="status" {{ d.status == 1 ? 'checked' : '' }}>
+</script>
+
+<script type="text/html" id="toolTpl">
+    <a class="layui-btn layui-btn-blue layui-btn-sm" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-primary layui-btn-sm" lay-event="del">删除</a>
+</script>
+
+
+
+<script type="text/html" id="edit">
+    <form class="layui-form" action="">
+        <div class="layui-row" id="editForm">
+            <div class="layui-col-md9">
+                <div class="inner">
+                    <div id="layui_md"></div>
+                </div>
+            </div>
+
+            <div class="layui-col-md3">
+                <div class="inner edit-form">
+                    <div class="layui-form-item">
+                        <label> 文章标题 </label>
+                        <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-item">
+                        <label> 文章类别 </label>
+                        <select name="city" lay-verify="required">
+                            <option value=""></option>
+                            <option value="0">北京</option>
+                            <option value="1">上海</option>
+                            <option value="2">广州</option>
+                            <option value="3">深圳</option>
+                            <option value="4">杭州</option>
+                        </select>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label> 标签 </label>
+                        <div class="tags">
+                            <input type="checkbox" name="" title="写作" lay-skin="primary" checked>
+                            <input type="checkbox" name="" title="发呆" lay-skin="primary">
+                            <input type="checkbox" name="" title="发呆" lay-skin="primary">
+                            <input type="checkbox" name="" title="发呆" lay-skin="primary">
+                            <input type="checkbox" name="" title="发呆" lay-skin="primary">
+                            <input type="checkbox" name="" title="发呆" lay-skin="primary">
+                            <input type="checkbox" name="" title="发呆" lay-skin="primary">
+                            <input type="checkbox" name="" title="发呆" lay-skin="primary">
+                            <input type="checkbox" name="" title="发呆" lay-skin="primary">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label> 缩略图 </label>
+                        <div class="layui-upload-drag edit_update" id="">
+                            <i class="layui-icon"></i>
+                            <p>点击上传，或将文件拖拽到此处</p>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <input type="checkbox" name="close" lay-skin="switch" lay-text="ON|OFF">
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <button type="button" class="layui-btn layui-btn-blue layui-btn-fluid layui-btn-radius"> 保 存 </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </form>
+</script>
 
 </body>
 </html>

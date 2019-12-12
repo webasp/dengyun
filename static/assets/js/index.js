@@ -50,7 +50,7 @@
             },
 
             setLocalStorage:function(key,val){
-                var exp=new Date().getTime()+2*24*60*60*100;  //令牌过期时间
+                var exp=new Date().getTime()+2*60*60*1000;  //令牌过期时间
                 var obj={
                     val:val,
                     exp:exp
