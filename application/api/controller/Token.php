@@ -64,4 +64,15 @@ class Token
         ];
     }
 
+    /**
+     * 验证 Token
+     * @url
+     * @POST
+     */
+    public function getQiniuToken()
+    {
+
+    }
+
+
 }

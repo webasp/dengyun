@@ -1,4 +1,3 @@
-var $ = layui.$;
 window.base={
     g_restUrl:'http://dev.dengyun.me/',
     getData:function(params){

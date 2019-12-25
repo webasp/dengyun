@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="__ASSETS__/css/layui.css">
     <link rel="stylesheet" href="__ASSETS__/css/view.css"/>
-    <link rel="stylesheet" href="__ASSETS__/css/markdown-editor.css"/>
+    <link rel="stylesheet" href="__ASSETS__/editor/css/editormd.min.css">
     <link rel="icon" href="/favicon.ico">
     <title> 文章列表 </title>
 </head>
@@ -40,15 +40,16 @@
     </div>
 </div>
 <script src="__ASSETS__/layui.all.js"></script>
-<script src="__ASSETS__/Parser.js"></script>
 <script src="__ASSETS__/js/base.js"></script>
+<script src="__ASSETS__/editor/editormd.js"></script>
+<input type="hidden" id="token" name="token" value="rmCsWksvk6RuCqs0F7g_vbrwpsSW76uZiVjqL6lQ:1b513APZ3OdDDQpzfM31CTnvX54=:eyJzY29wZSI6ImRlbmd5dW4iLCJkZWFkbGluZSI6MTU3NzI0Nzg0MH0=">
 
 <script>
     var form = layui.form;
     var table = layui.table;
     var layer = layui.layer;
     var laytpl = layui.laytpl;
-    var $ = layui.$;
+
     table.render({
         elem: '#article'
         ,url:'/api/admin/artall'
@@ -98,11 +99,6 @@
     });
 
 
-    layui.config({base: '/static/assets/lay/'}).extend({
-        markdown: 'modules/markdown'
-    });
-
-
     //监听性别操作
     form.on('checkbox(selected)', function(obj){
         layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
@@ -135,19 +131,26 @@
 
                 form.render();
 
-
-
-
-                layui.use(['form', 'markdown'], function () {
-                    layui.markdown.build("layui_md", {
-                        image_upload_action: '/admin/attachment/uploadImage',
-                        height: 400, required: true
-                    });
-                    // markdown 解析
-                    // var parser = new HyperDown;
-                    //var html = parser.makeHtml(val);
-                })
-
+                // 载入编辑配置文件
+                 editormd("content", {
+                    width   : "100%",
+                    height  : "698",
+                    syncScrolling : "single",
+                    watch : false,
+                    autoHeight : false,
+                    path    : "/static/assets/editor/lib/",
+                    imageUpload    : true,
+                    imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                     toolbarIcons : function() {
+                         return [
+                             "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
+                             "h1", "h2", "h3", "h4", "h5", "h6", "|",
+                             "list-ul", "list-ol", "hr", "|",
+                             "link", "image", "code", "code-block", "table", "|",
+                             "preview"
+                         ]
+                     }
+                });
 
 
                 form.on('submit(user_record)', function(data){
@@ -195,7 +198,7 @@
         <div class="layui-row" id="editForm">
             <div class="layui-col-md9">
                 <div class="inner">
-                    <div id="layui_md"></div>
+                    <div id="content"><textarea></textarea></div>
                 </div>
             </div>
 

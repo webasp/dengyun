@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="__ASSETS__/css/layui.css">
     <link rel="stylesheet" href="__ASSETS__/css/view.css"/>
-    <link rel="stylesheet" href="__ASSETS__/css/modules/markdown/markdown-editor.css"/>
-
+    <link rel="stylesheet" href="__ASSETS__/editor/css/editormd.min.css">
     <link rel="icon" href="/favicon.ico">
     <title> 文章列表 </title>
 </head>
@@ -43,6 +42,7 @@
                     <div class="layui-form-item layui-form-text">
                         <label class="layui-form-label"> 文章简介 </label>
                         <div class="layui-input-block">
+                            <input type="file" id="thumb-file" name="thumb-file">
                             <textarea name="desc" placeholder="文章简介" class="layui-textarea"></textarea>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label"> 内容 </label>
                         <div class="layui-input-block">
-                             <div id="layui_md"></div>
+                            <div id="content"><textarea></textarea></div>
                         </div>
                     </div>
                 </form>
@@ -68,8 +68,15 @@
     </div>
 
 <script src="__ASSETS__/layui.all.js"></script>
-<script src="__ASSETS__/Parser.js"></script>
+<script src="__ASSETS__/editor/editormd.js"></script>
+<script src="__ASSETS__/editor/configeditor.js"></script>
+<script src="__JS__/update.js"></script>
+
 <script>
+
+   $(function (e) {
+        $('#thumb').Update();
+    });
 
 
 
